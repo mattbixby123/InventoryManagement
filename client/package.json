@@ -1,0 +1,38 @@
+{
+  "name": "inventory-management",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.1.1",
+    "@mui/x-data-grid": "^7.18.0",
+    "axios": "^1.7.7",
+    "lucide-react": "^0.446.0",
+    "next": "^14.2.13",
+    "numeral": "^2.0.6",
+    "react": "^18",
+    "react-dom": "^18",
+    "recharts": "^2.12.7",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.9",
+    "@types/numeral": "^2.0.5",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/uuid": "^10.0.0",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.13",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "tw-colors": "^3.3.2",
+    "typescript": "^5"
+  }
+}
