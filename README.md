@@ -5,3 +5,17 @@ This application uses NextJS for the frontend and AWS for the backend (PostgreSQ
 NextJS/TypeScript/ReduxToolkit
 
 pgAdmin4 used to manage test postgresql database
+
+## Tech Stack
+- Next JS
+- Tailwind
+- Redux Toolkit
+- Redux Toolkit Query
+- Material UI Data Grid
+- Node.js
+- Prisma
+- AWS EC2
+- AWS RDS
+- AWS API Gateway
+- AWS Amplify
+- AWS S3
