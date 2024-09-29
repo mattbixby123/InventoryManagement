@@ -36,7 +36,7 @@ export interface ExpenseByCategorySummary {
 }
 
 export interface DashboardMetrics {
-  pupularProducts: Product[];
+  popularProducts: Product[];
   salesSummary: SalesSummary[];
   purchaseSummary: PurchaseSummary[];
   expenseSummary: ExpenseSummary[];
