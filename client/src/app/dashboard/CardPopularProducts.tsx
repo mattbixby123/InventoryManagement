@@ -1,5 +1,5 @@
 import React from 'react'
-import { useGetDashboardMetricsQuery } from '../state/api'
+import { useGetDashboardMetricsQuery } from '../../state/api'
 import { ShoppingBag } from 'lucide-react';
 import Rating from '../(components)/Rating';
 
