@@ -49,10 +49,9 @@ const CreateProductModal = ({
 
   const labelCssStyles = "block text-sm font-medium text-gray-700";
   const inputCssStyles =
-    "block w-full mb-2 p-2 border-gray-500 border-2 rounded-md";
-
+  "block w-full mb-2 p-2 border-gray-300 dark:border-gray-600 border-2 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100";
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-20">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 dark:bg-gray-800 dark:bg-opacity-50 overflow-y-auto h-full w-full z-20">
       <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <Header name="Create New Product" />
         <form onSubmit={handleSubmit} className="mt-5">
