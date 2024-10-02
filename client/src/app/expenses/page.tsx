@@ -2,7 +2,7 @@
 
 import {
   ExpenseByCategorySummary,
-  // useGetExpensesByCategoryQuery,
+  useGetExpensesByCategoryQuery,
 } from "@/state/api";
 import { useMemo, useState } from "react";
 import Header from "@/app/(components)/Header";
