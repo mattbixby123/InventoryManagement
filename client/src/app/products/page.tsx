@@ -4,9 +4,9 @@ import { useCreateProductMutation, useGetProductsQuery } from "@/state/api";
 import { PlusCircleIcon, SearchIcon } from "lucide-react";
 import { useState } from "react";
 import Header from "../(components)/Header";
-// import Image from "next/image";
 import Rating from "../(components)/Rating";
 import CreateProductModal from "./CreateProductModal";
+import Image from "next/image";
 
 type ProductFormData = {
   name: string;
@@ -76,15 +76,15 @@ const Products = () => {
               className="border shadow rounded-md p-4 max-w-full w-full mx-auto"
             >
               <div className="flex flex-col items-center">
-                {/* <Image
-                  src={`https://s3-inventorymanagement.s3.us-east-2.amazonaws.com/product${
+                <Image
+                  src={`https://s3-inventorymanager.s3.amazonaws.com/product${
                     Math.floor(Math.random() * 3) + 1
                   }.png`}
                   alt={product.name}
                   width={150}
                   height={150}
                   className="mb-3 rounded-2xl w-36 h-36"
-                /> */}
+                />
                 <h3 className="text-lg text-gray-900 font-semibold">
                   {product.name}
                 </h3>
