@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Most all of this redux file is boilerplate for all nextjs projects
 import { useRef } from "react";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
