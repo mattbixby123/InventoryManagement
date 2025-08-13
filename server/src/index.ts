@@ -22,8 +22,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
-// Static Files
-app.use('/api/images', express.static(path.join(__dirname, '../assets')));
+/* CORS config */
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:8000"
+  ],
+  credentials: true
+}));
+
+/* Static Files */
+app.use('/api/images', express.static(path.join(__dirname, '../assets'), {
+  // Cache images for 1 year (recommended for production)
+  maxAge: 31536000,
+  // Allow CORS for images
+  setHeaders: (res) => {
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
+}));
+// app.use('/api/images', express.static(path.join(__dirname, '../assets'))); #simpler version w/o cors
 
 /* ROUTES */
 app.use("/dashboard", dashboardRoutes); // http://localhost:8000/dashboard
@@ -31,14 +48,6 @@ app.use("/products", productRoutes); // http://localhost:8000/products
 app.use("/users", userRoutes); // http://localhost:8000/users
 app.use("/expenses", expenseRoutes) // http://localhost:8000/expenses
 
-// app.use(cors({
-//   origin: [
-//     "http://localhost:3000",
-//     "http://frontend:3000",
-//     "http://backend:8000"
-//   ],
-//   credentials: true
-// }));
 
 /* SERVER */
 const port = Number(process.env.PORT) || 8000;

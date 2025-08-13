@@ -16,7 +16,7 @@ const nextConfig = {
         pathname: "/**",
       }
     ],
-    // Optional: Disable in development if needed
+    // This is needed for the iamges to work in development right now
     unoptimized: process.env.NODE_ENV === 'development'
   }
 };
