@@ -1,68 +1,3 @@
-# BixStock - Enterprise Inventory Management System
-
-## Overview
-A full-stack inventory management dashboard originally built with AWS cloud architecture and now containerized with Docker for enhanced development workflow. The application demonstrates both cloud-native design principles and modern containerization practices.
-
-## Inspiration & Purpose
-My inspiration came from wanting to create a robust enterprise-level application that would demonstrate my AWS cloud skills and full-stack capabilities. After running successfully on AWS infrastructure for over a year, I containerized the application to streamline development processes and enable more flexible deployment options while maintaining the same enterprise-grade functionality.
-
-## Architecture Evolution
-
-### Original AWS Cloud Architecture (Production)
-- **AWS EC2**: Application hosting
-- **AWS RDS (PostgreSQL)**: Managed database service
-- **AWS S3**: Static asset storage
-- **AWS API Gateway**: API endpoint management
-- **AWS Amplify**: Automated deployment pipeline
-
-### Current Containerized Architecture (Development)
-- **Docker**: Containerized development environment
-- **PostgreSQL**: Database container with persistent storage
-- **Express.js**: RESTful API server
-- **Next.js**: React-based frontend
-- **Nginx**: Reverse proxy for production deployments
-
-## Tech Stack Decisions
-### Frontend
-- **Next.js & TypeScript**: Chosen for type safety and enhanced development experience
-- **Material UI Data Grid**: Implemented for handling inventory data with sorting and filtering capabilities
-- **Redux Toolkit**: Used for state management
-- **Tailwind CSS**: Selected for UI development and consistent styling
-
-### Backend & Infrastructure
-- **Express.js**: RESTful API server with TypeScript
-- **PostgreSQL**: Robust relational database for inventory data
-- **Prisma ORM**: Type-safe database queries and schema management
-- **Docker**: Containerized development and deployment environment
-- **Nginx**: Reverse proxy for production deployments
-
-### Cloud Experience (AWS)
-- **Previous AWS Deployment**: Successfully hosted on AWS infrastructure for 1+ year
-- **AWS EC2, RDS, S3, API Gateway, Amplify**: Proven experience with full AWS stack
-- **Cloud-to-Container Migration**: Containerized for improved development workflow
-
-## Development Tools
-- Docker Desktop for container management
-- pgAdmin4 for PostgreSQL database administration
-- Node.js for server-side operations
-- TypeScript for code reliability across the stack
-
-## Current Features
-- Static inventory display with sorting and filtering
-- Dark/Light mode toggle
-- Admin user authentication
-- Responsive dashboard layout
-- Docker containerized development environment
-- PostgreSQL database integration
-- Image asset serving
-
-## Getting Started
-
-### Prerequisites
-- Docker Desktop installed
-- Node.js 22+ (for local development)
-- Git
-
 ### Option 1: Docker Development (Recommended)
 
 1. **Clone the repository**
@@ -80,7 +15,7 @@ My inspiration came from wanting to create a robust enterprise-level application
 
 3. **Start the application with Docker**
    ```bash
-   # Build and start all services (database, backend, frontend)
+   # Build and start all services (database, backend, frontend, nginx)
    docker-compose up --build
    
    # Or run in background
@@ -88,9 +23,12 @@ My inspiration came from wanting to create a robust enterprise-level application
    ```
 
 4. **Access the application**
-   - Frontend: http://localhost:3000
+   - **Main Application**: http://localhost (port 80) - **Use this for full functionality**
+   - Direct Frontend: http://localhost:3000 (development only)
    - Backend API: http://localhost:8000
    - Database: localhost:5432 (for direct access)
+
+   > **Important**: Always use `http://localhost` (port 80) to access the application in Docker. This routes through nginx and ensures static images, assets, and API calls work correctly. Accessing `localhost:3000` directly bypasses the nginx proxy and may result in 404 errors for images and other static assets.
 
 5. **View logs** (if running in background)
    ```bash
@@ -100,46 +38,12 @@ My inspiration came from wanting to create a robust enterprise-level application
    docker-compose logs -f frontend
    docker-compose logs -f backend
    docker-compose logs -f postgres
+   docker-compose logs -f nginx
    ```
 
 6. **Stop the application**
    ```bash
    docker-compose down
-   ```
-
-### Option 2: Local Development
-
-1. **Install dependencies**
-   ```bash
-   # Install backend dependencies
-   cd server
-   npm install
-   
-   # Install frontend dependencies
-   cd ../client
-   npm install
-   ```
-
-2. **Set up local environment**
-   ```bash
-   # Copy and configure environment files
-   cp client/.env.example client/.env.local
-   cp server/.env.example server/.env.local
-   ```
-
-3. **Start PostgreSQL locally** (if not using Docker)
-   ```bash
-   # Make sure PostgreSQL is running on your machine
-   # Update DATABASE_URL in server/.env.local to match your local setup
-   ```
-
-4. **Run development servers**
-   ```bash
-   # Start backend (from server directory)
-   npm run dev
-   
-   # Start frontend (from client directory, new terminal)
-   npm run dev
    ```
 
 ## Docker Commands Reference
@@ -157,6 +61,7 @@ docker-compose down
 
 # Restart specific service
 docker-compose restart backend
+docker-compose restart nginx
 
 # View logs
 docker-compose logs -f
@@ -185,61 +90,42 @@ docker image prune
 
 # Check Docker volumes
 docker volume ls
+
+# Test nginx configuration
+docker-compose exec nginx nginx -t
+
+# Check if all services are healthy
+docker-compose ps
 ```
 
-## Project Structure
+## Port Configuration & Nginx Proxy
+
+The Docker setup includes an nginx reverse proxy that handles routing and static file serving:
+
+- **Port 80 (nginx)**: Main application access point
+  - Routes `/api/*` requests to backend server (port 8000)
+  - Serves static assets (`/static/*`) directly from nginx
+  - Proxies all other requests to frontend (port 3000)
+  
+- **Port 3000 (frontend)**: Next.js development server (internal)
+- **Port 8000 (backend)**: Express API server (internal)
+- **Port 5432 (database)**: PostgreSQL database (exposed for admin tools)
+
+### Why Use Port 80?
+- **Static Assets**: Images, CSS, and other assets are served efficiently by nginx
+- **API Routing**: Seamless API calls without CORS issues
+- **Production Simulation**: Mimics real deployment architecture
+- **Performance**: nginx handles static files better than Next.js in development mode
+
+### Development vs Production URLs
+```bash
+# Docker Development (recommended)
+http://localhost          # Full application through nginx
+
+# Local Development (no containers)
+http://localhost:3000     # Frontend only
+http://localhost:8000/api # Backend only
+
+# Production (when deployed)
+https://yourdomain.com    # Full application through nginx/load balancer
 ```
-InventoryManager/
-├── client/                 # Next.js frontend
-│   ├── Dockerfile
-│   ├── .env.example
-│   ├── .env.docker         # Gitignored
-│   └── package.json
-├── server/                 # Express backend
-│   ├── Dockerfile
-│   ├── .env.example
-│   ├── .env.docker         # Gitignored
-│   ├── assets/            # Product images
-│   └── prisma/
-├── docker-compose.yml      # Container orchestration
-├── nginx.conf             # Production proxy config
-└── README.md
-```
-
-## Environment Configuration
-
-The application uses environment files for configuration:
-- `.env.example` files are committed and show required variables
-- `.env.docker` files are gitignored and contain actual values
-- Copy example files to create your environment configuration
-
-## Database Management
-
-The PostgreSQL database runs in a Docker container with persistent data storage. The database is automatically set up with:
-- Username: `matthewbixby`
-- Password: `inventory123` (change in .env.docker)
-- Database: `inventory_management`
-
-Prisma handles schema management and migrations automatically on container startup.
-
-## Deployment History & Options
-
-### Production (AWS Cloud) - 2023-2024
-The application was successfully deployed and maintained on AWS infrastructure, demonstrating:
-- **Scalable Architecture**: AWS EC2 auto-scaling groups
-- **Managed Database**: AWS RDS PostgreSQL with automated backups
-- **CDN Integration**: AWS S3 + CloudFront for asset delivery
-- **CI/CD Pipeline**: AWS Amplify for automated deployments
-
-### Current Development (Docker)
-Containerized for enhanced development experience and deployment flexibility:
-- **Local Development**: Full-stack environment in Docker containers
-- **Production Ready**: Container images deployable to any Docker-compatible platform
-- **Cloud Agnostic**: Can deploy to AWS ECS, Google Cloud Run, Azure Container Instances, or any Kubernetes cluster
-
-## Contributing
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test with Docker: `docker-compose up --build`
-5. Submit a pull request
