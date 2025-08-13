@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "BIXSTOCK",
   description: "created by M. Bixby",
   icons: {
-    icon: "/logo.png", // relative path to the logo in the public folder
+    icon: "/static/images/logo.png", // relative path to the logo in the public folder
   },
 };
 

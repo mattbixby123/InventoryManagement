@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -23,23 +23,35 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 /* CORS config */
-app.use(cors({
+// app.use(cors({
+//   origin: [
+//     "http://localhost:3000",
+//     "http://localhost:8000"
+//   ],
+//   credentials: true
+// }));
+/* CORS config */
+const corsOptions = {
   origin: [
-    "http://localhost:3000",
-    "http://localhost:8000"
+    process.env.NODE_ENV === 'production' 
+      ? 'https://yourdomain.com' 
+      : 'http://frontend:3000', // Docker service name
+    'http://localhost:3000' // Fallback for local dev
   ],
-  credentials: true
-}));
+  credentials: true,
+  exposedHeaders: ['Cross-Origin-Resource-Policy']
+};
+app.use(cors(corsOptions));
 
 /* Static Files */
-app.use('/api/images', express.static(path.join(__dirname, '../assets'), {
-  // Cache images for 1 year (recommended for production)
-  maxAge: 31536000,
-  // Allow CORS for images
-  setHeaders: (res) => {
-    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
-  }
-}));
+// app.use('/api/images', express.static(path.join(__dirname, '../assets'), {
+//   // Cache images for 1 year (recommended for production)
+//   maxAge: 31536000,
+//   // Allow CORS for images
+//   setHeaders: (res) => {
+//     res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+//   }
+// }));
 // app.use('/api/images', express.static(path.join(__dirname, '../assets'))); #simpler version w/o cors
 
 /* ROUTES */
@@ -48,7 +60,10 @@ app.use("/products", productRoutes); // http://localhost:8000/products
 app.use("/users", userRoutes); // http://localhost:8000/users
 app.use("/expenses", expenseRoutes) // http://localhost:8000/expenses
 
-
+// health check route
+app.get('/health', (_req: Request, res: Response) => {
+  res.status(200).send('OK');
+});
 /* SERVER */
 const port = Number(process.env.PORT) || 8000;
 app.listen(port, "0.0.0.0", () => {

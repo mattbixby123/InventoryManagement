@@ -2,12 +2,23 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      // For local Docker development
       {
         protocol: 'http',
-        hostname: 'backend', // Docker service name (not 'localhost')
-        port: '8000',
-        pathname: '/api/images/**',
+        hostname: 'localhost',
+        port: '80',
+        pathname: '/static/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'nginx',
+        port: '80',
+        pathname: '/static/**',
+      },
+      // For production (example)
+      {
+        protocol: 'https',
+        hostname: 'yourdomain.com',
+        pathname: '/static/**',
       },
       // For production (S3)
       {
@@ -16,8 +27,8 @@ const nextConfig = {
         pathname: "/**",
       }
     ],
-    // This is needed for the iamges to work in development right now
-    unoptimized: process.env.NODE_ENV === 'development'
+    // Disable optimization for static images in development
+    unoptimized: true
   }
 };
 
