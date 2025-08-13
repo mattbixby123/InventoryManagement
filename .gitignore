@@ -33,6 +33,19 @@ lerna-debug.log*
 .env.test.local
 .env.production.local
 
+# Docker environment files
+.env.docker
+.env.development
+.env.production
+
+# Client environment files
+client/.env*
+!client/.env.example
+
+# Server environment files
+server/.env*
+!server/.env.example
+
 # ===============================================
 # NEXT.JS SPECIFIC
 # ===============================================
@@ -78,6 +91,9 @@ lib/
 # Prisma
 prisma/migrations/
 prisma/dev.db*
+
+# PostgreSQL data (if running locally)
+postgres_data/
 
 # ===============================================
 # TESTING
@@ -204,8 +220,17 @@ docker-compose.override.yml
 docker-compose.prod.yml
 Dockerfile.prod
 
-# Docker volumes
+# Docker environment files
+.env.docker
+.env.development
+.env.production
+
+# Docker volumes and data
 .docker/
+postgres_data/
+
+# Docker logs
+docker-compose.log
 
 # ===============================================
 # SECURITY & CERTIFICATES
