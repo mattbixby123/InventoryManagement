@@ -16,10 +16,10 @@
 3. **Start the application with Docker**
    ```bash
    # Build and start all services (database, backend, frontend, nginx)
-   docker-compose up --build
+   docker compose up --build
    
    # Or run in background
-   docker-compose up -d --build
+   docker compose up -d --build
    ```
 
 4. **Access the application**
@@ -32,18 +32,18 @@
 
 5. **View logs** (if running in background)
    ```bash
-   docker-compose logs -f
+   docker compose logs -f
    
    # Or view specific service logs
-   docker-compose logs -f frontend
-   docker-compose logs -f backend
-   docker-compose logs -f postgres
-   docker-compose logs -f nginx
+   docker compose logs -f frontend
+   docker compose logs -f backend
+   docker compose logs -f postgres
+   docker compose logs -f nginx
    ```
 
 6. **Stop the application**
    ```bash
-   docker-compose down
+   docker compose down
    ```
 
 ## Docker Commands Reference
@@ -51,27 +51,27 @@
 ### Essential Commands:
 ```bash
 # Start development environment
-docker-compose up --build
+docker compose up --build
 
 # Start in background
-docker-compose up -d --build
+docker compose up -d --build
 
 # Stop all services
-docker-compose down
+docker compose down
 
 # Restart specific service
-docker-compose restart backend
-docker-compose restart nginx
+docker compose restart backend
+docker compose restart nginx
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # Rebuild specific service
-docker-compose build frontend
-docker-compose up frontend
+docker compose build frontend
+docker compose up frontend
 
 # Clean up (remove containers and volumes)
-docker-compose down -v
+docker compose down -v
 ```
 
 ### Troubleshooting:
@@ -92,10 +92,10 @@ docker image prune
 docker volume ls
 
 # Test nginx configuration
-docker-compose exec nginx nginx -t
+docker compose exec nginx nginx -t
 
 # Check if all services are healthy
-docker-compose ps
+docker compose ps
 ```
 
 ## Port Configuration & Nginx Proxy
