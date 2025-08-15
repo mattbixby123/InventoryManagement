@@ -23,14 +23,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 /* CORS config */
-// app.use(cors({
-//   origin: [
-//     "http://localhost:3000",
-//     "http://localhost:8000"
-//   ],
-//   credentials: true
-// }));
-/* CORS config */
 const corsOptions = {
   origin: [
     process.env.NODE_ENV === 'production' 
@@ -43,22 +35,20 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-/* Static Files */
-// app.use('/api/images', express.static(path.join(__dirname, '../assets'), {
-//   // Cache images for 1 year (recommended for production)
-//   maxAge: 31536000,
-//   // Allow CORS for images
-//   setHeaders: (res) => {
-//     res.set('Cross-Origin-Resource-Policy', 'cross-origin');
-//   }
-// }));
-// app.use('/api/images', express.static(path.join(__dirname, '../assets'))); #simpler version w/o cors
+/* Static Files handled in .env.local for non docker development*/
+if (process.env.SERVE_STATIC_IMAGES === 'true' && !process.env.DOCKER_ENV) {
+  // Use process.cwd() to get the project root, not __dirname
+  const imagesPath = path.join(process.cwd(), 'public/images');
+  app.use('/api/public/images', express.static(imagesPath));
+  console.log('🖼️ Serving static images from:', imagesPath);
+}
 
 /* ROUTES */
 app.use("/dashboard", dashboardRoutes); // http://localhost:8000/dashboard
 app.use("/products", productRoutes); // http://localhost:8000/products
 app.use("/users", userRoutes); // http://localhost:8000/users
 app.use("/expenses", expenseRoutes) // http://localhost:8000/expenses
+
 
 // health check route
 app.get('/health', (_req: Request, res: Response) => {
