@@ -27,6 +27,8 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+    environment:
+      - DOCKER_ENV=true
     env_file:
       - ./server/.env.docker
     ports:
