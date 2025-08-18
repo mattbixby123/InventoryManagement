@@ -31,11 +31,11 @@ services:
       - DOCKER_ENV=true
     env_file:
       - ./server/.env.docker
-    ports:
-      - "8000:8000"
     depends_on:
       postgres:
         condition: service_healthy
+    expose:
+      - "8000"
     volumes:
       - /app/node_modules
     networks:
