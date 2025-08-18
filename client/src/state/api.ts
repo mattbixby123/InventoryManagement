@@ -61,30 +61,30 @@ export const api = createApi({
   tagTypes: ["DashboardMetrics", "Products", "Users", "Expenses"],
   endpoints: (build) => ({
     getDashboardMetrics: build.query<DashboardMetrics, void>({
-      query: () => "/dashboard",
+      query: () => "/api/dashboard",
       providesTags: ["DashboardMetrics"] 
     }),
     getProducts: build.query<Product[], string | void>({
       query: (search) => ({
-        url: "/products",
+        url: "/api/products",
         params: search ? { search } : {}
       }),
       providesTags: ["Products"]
     }),
     createProduct: build.mutation<Product, NewProduct>({
       query: (newProduct) => ({
-        url: "/products",
+        url: "/api/products",
         method: "POST",
         body: newProduct
       }),
       invalidatesTags: ["Products"]
     }),
     getUsers: build.query<User[], void>({
-      query: () => "/users",
+      query: () => "/api/users",
       providesTags: ["Users"],
     }),
     getExpensesByCategory: build.query<ExpenseByCategorySummary[], void>({
-      query: () => "/expenses",
+      query: () => "/api/expenses",
       providesTags: ["Expenses"],
     }),
   })

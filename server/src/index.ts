@@ -27,7 +27,7 @@ const corsOptions = {
   origin: [
     process.env.NODE_ENV === 'production' 
       ? 'https://yourdomain.com' 
-      : 'http://frontend:3000', // Docker service name
+      : 'http://frontend', // Docker service name
     'http://localhost:3000' // Fallback for local dev
   ],
   credentials: true,
@@ -44,10 +44,10 @@ if (process.env.SERVE_STATIC_IMAGES === 'true' && !process.env.DOCKER_ENV) {
 }
 
 /* ROUTES */
-app.use("/dashboard", dashboardRoutes); // http://localhost:8000/dashboard
-app.use("/products", productRoutes); // http://localhost:8000/products
-app.use("/users", userRoutes); // http://localhost:8000/users
-app.use("/expenses", expenseRoutes) // http://localhost:8000/expenses
+app.use("/api/dashboard", dashboardRoutes); // http://localhost:8000/dashboard
+app.use("/api/products", productRoutes); // http://localhost:8000/products
+app.use("/api/users", userRoutes); // http://localhost:8000/users
+app.use("/api/expenses", expenseRoutes) // http://localhost:8000/expenses
 
 
 // health check route
