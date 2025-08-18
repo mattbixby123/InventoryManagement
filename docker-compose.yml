@@ -74,9 +74,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./server/public:/var/www/static:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
     networks:
       - inventory-network
     depends_on:
