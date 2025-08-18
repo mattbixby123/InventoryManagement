@@ -20,15 +20,14 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors());
 
 /* CORS config */
 const corsOptions = {
   origin: [
     process.env.NODE_ENV === 'production' 
-      ? 'https://yourdomain.com' 
-      : 'http://frontend', // Docker service name
-    'http://localhost:3000' // Fallback for local dev
+      ? 'https://inventory.matthewbixby.com' 
+      : 'https://localhost',  // Change to HTTPS since nginx redirects
+    'http://localhost:3000'
   ],
   credentials: true,
   exposedHeaders: ['Cross-Origin-Resource-Policy']
