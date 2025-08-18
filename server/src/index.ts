@@ -54,6 +54,7 @@ app.use("/expenses", expenseRoutes) // http://localhost:8000/expenses
 app.get('/health', (_req: Request, res: Response) => {
   res.status(200).send('OK');
 });
+
 /* SERVER */
 const port = Number(process.env.PORT) || 8000;
 app.listen(port, "0.0.0.0", () => {
