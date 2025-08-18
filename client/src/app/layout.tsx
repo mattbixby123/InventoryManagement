@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "BIXSTOCK",
   description: "created by M. Bixby",
   icons: {
-    icon: "/logo.png", // relative path to the logo in the client/public folder
+    icon: "/static/images/logo.png", // access nginx cached 
   },
 };
 
