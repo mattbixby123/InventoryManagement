@@ -23,11 +23,15 @@ lerna-debug.log*
 # Optional npm cache directory
 .npmrc
 
+# VPS-specific configs
+docker-compose.vps.yml
+nginx/nginx.vps.conf
+
 # ===============================================
 # ENVIRONMENT VARIABLES
 # ===============================================
 # Keep environment variables out of version control
-.env
+.env*
 .env*.local
 .env.development.local
 .env.test.local
