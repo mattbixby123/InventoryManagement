@@ -213,3 +213,105 @@ docker compose exec nginx curl http://backend:8000/api/users
 ```
 
 > **Note**: Load balancing may take 1-2 page refreshes to fully distribute requests as nginx establishes connections to all backend instances.
+
+## Performance Monitoring & Optimization
+
+### Monitoring Setup
+
+The application includes built-in performance monitoring tools to help optimize your deployment:
+
+```bash
+# Set up performance monitoring (run once)
+./scripts/setup_monitoring.sh
+
+# After containers are running, check logs are being generated
+ls -la logs/
+
+# Run initial performance test
+./scripts/test_performance.sh
+
+# Analyze baseline performance
+./scripts/analyze_logs.sh
+```
+
+### Nginx Performance Logging
+
+The setup includes detailed performance logging with metrics for:
+
+- **Request timing** (`$request_time`) - Total request processing time
+- **Upstream connect time** (`$upstream_connect_time`) - Backend connection time  
+- **Upstream header time** (`$upstream_header_time`) - Time to first backend response
+- **Upstream response time** (`$upstream_response_time`) - Total backend processing time
+
+Logs are stored in: `logs/detailed_access.log`
+
+### Performance Testing
+
+```bash
+# Run comprehensive performance tests
+./scripts/test_performance.sh
+
+# Test specific endpoints with detailed timing
+curl -w "@scripts/curl-format.txt" -s -o /dev/null http://localhost/api/dashboard
+curl -w "@scripts/curl-format.txt" -s -o /dev/null http://localhost/api/inventory
+```
+
+### Key Performance Metrics to Monitor
+
+- **Page Load Times** (should be < 2s for dashboard)
+- **API Response Times** (should be < 500ms)  
+- **Database Query Performance** (check Postgres logs)
+- **Static Asset Delivery** (nginx vs Next.js comparison)
+
+### Optimization Tips
+
+- **Enable Caching**: Review and optimize nginx caching headers
+- **Database Indexing**: Use Prisma's built-in indexing tools
+- **CDN Integration**: Consider Cloudflare for static assets
+- **Image Optimization**: Compress product images before upload
+- **Connection Pooling**: Optimize database connection limits
+
+### Monitoring Commands
+
+```bash
+# View real-time nginx logs
+docker compose logs -f nginx
+
+# Check performance logs
+tail -f logs/detailed_access.log
+
+# Monitor container resource usage
+docker stats
+
+# Test API response times
+curl -o /dev/null -s -w "Total: %{time_total}s\n" http://localhost/api/dashboard
+```
+
+### Load Testing
+
+For production deployments, consider:
+
+```bash
+# Install and run basic load testing
+npm install -g artillery
+artillery quick --count 20 -n 10 http://localhost/dashboard
+```
+
+## VPS-Specific Deployment
+
+For production VPS deployments, use the VPS-specific configuration:
+
+```bash
+# Use VPS-specific compose file
+docker compose -f docker-compose.vps.yml up --build -d
+
+# Set up monitoring for VPS
+./scripts/setup_monitoring.sh
+
+# Check VPS-specific nginx config
+vim nginx/nginx.vps.conf
+```
+
+The performance monitoring setup provides baseline metrics to track improvements as you optimize your application for production use.
+
+> **Note**: Performance monitoring may generate significant log files. Consider implementing log rotation for production deployments.
