@@ -315,3 +315,38 @@ vim nginx/nginx.vps.conf
 The performance monitoring setup provides baseline metrics to track improvements as you optimize your application for production use.
 
 > **Note**: Performance monitoring may generate significant log files. Consider implementing log rotation for production deployments.
+
+### Current Performance Benchmarks
+
+#### API Response Times (Optimized)
+- **Average**: 0.07s
+- **Range**: 0.04s - 0.11s
+- **Test Method**: Direct API endpoint testing
+
+#### Full Page Load Times (Real User Experience)
+- **Initial Load (Cold)**: 28.87s - First visit, includes compilation
+- **Subsequent Loads (Warm)**: 1.0s - 2.0s - Cached assets
+- **API-only Requests**: 0.04s - 0.11s - Backend performance
+
+#### Key Insights:
+- **Backend API** is highly optimized (< 0.1s response)
+- **Frontend initial load** suffers from cold start compilation
+- **Static assets** load quickly (0.03s - 0.6s) once cached
+- **Overall user experience**: 7-10s perceived load time for first visit
+
+
+### Log Management for Performance Testing
+
+**Current Log Size:** `$(du -sh logs/)`
+
+**Log Rotation Recommended:**
+- Rotate logs before each test series
+- Keep only relevant test periods
+- Monitor disk usage during extended testing
+
+**Cleanup Command:**
+```bash
+# Keep last 1000 lines only
+tail -1000 logs/detailed_access.log > logs/detailed_access.log.tmp
+mv logs/detailed_access.log.tmp logs/detailed_access.log
+```
