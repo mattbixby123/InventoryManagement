@@ -18,11 +18,11 @@ chmod 755 logs
 
 # Check if nginx config has detailed logging format
 echo "Checking nginx configuration..."
-if grep -q "log_format detailed" nginx.conf; then
-    echo "✓ Detailed log format found in nginx.conf"
+if grep -q "log_format detailed" nginx/nginx.vps.conf; then
+    echo "✓ Detailed log format found in nginx.vps.conf"
 else
-    echo "❌ Detailed log format NOT found in nginx.conf"
-    echo "Please add the detailed log format to your nginx.conf:"
+    echo "❌ Detailed log format NOT found in nginx.vps.conf"
+    echo "Please add the detailed log format to your nginx.vps.conf:"
     echo ""
     echo "log_format detailed '\$remote_addr - \$remote_user [\$time_local] '"
     echo "                   '\"\$request\" \$status \$bytes_sent '"
@@ -34,28 +34,28 @@ else
 fi
 
 # Check if access_log is configured
-if grep -q "access_log.*detailed" nginx.conf; then
+if grep -q "access_log.*detailed" nginx/nginx.vps.conf; then
     echo "✓ Detailed access logging configured"
 else
     echo "❌ Detailed access logging NOT configured"
-    echo "Please add this line to your server block in nginx.conf:"
+    echo "Please add this line to your server block in nginx.vps.conf:"
     echo "access_log /var/log/nginx/detailed_access.log detailed;"
     exit 1
 fi
 
 # Check if docker-compose has log volume mounted
 echo "Checking docker-compose configuration..."
-if grep -q "logs:" docker-compose.yml; then
+if grep -q "logs:" docker-compose.vps.yml; then
     echo "✓ Log volume appears to be configured"
 else
-    echo "⚠️  Warning: Make sure your docker-compose.yml has log volume mounted"
+    echo "⚠️  Warning: Make sure your docker-compose.vps.yml has log volume mounted"
     echo "Example configuration:"
     echo ""
     echo "services:"
     echo "  nginx:"
     echo "    volumes:"
     echo "      - ./logs:/var/log/nginx"
-    echo "      - ./nginx.conf:/etc/nginx/nginx.conf"
+    echo "      - ./nginx/nginx.vps.conf:/etc/nginx/nginx.conf"
     echo ""
 fi
 
