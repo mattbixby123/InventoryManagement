@@ -113,6 +113,12 @@ coverage/
 # Jest
 jest-coverage/
 
+# Performance testing artifacts
+logs/
+performance_data/
+*.log
+baseline_results.txt
+
 # ===============================================
 # LOGS & RUNTIME DATA
 # ===============================================
