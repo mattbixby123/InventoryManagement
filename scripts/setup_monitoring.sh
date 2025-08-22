@@ -61,8 +61,8 @@ fi
 
 # Make scripts executable
 echo "Making scripts executable..."
-chmod +x scripts/analyze_logs.sh 2>/dev/null || echo "analyze_logs.sh not found (create it next)"
-chmod +x scripts/test_performance.sh 2>/dev/null || echo "test_performance.sh not found (create it next)"
+chmod +x scripts/analyze_logs.sh 2>/dev/null || echo "analyze_logs.sh not found"
+chmod +x scripts/test_performance.sh 2>/dev/null || echo "test_performance.sh not found"
 
 # Create a simple curl timing format file
 echo "Creating curl timing format..."
@@ -104,13 +104,40 @@ EOF
     chmod +x scripts/test_performance.sh
 fi
 
+# Create log cleanup script
+echo "Creating log cleanup script..."
+cat > scripts/cleanup_logs.sh << 'EOF'
+#!/bin/bash
+# cleanup_logs.sh - Manage nginx log growth for performance testing
+
+echo "=== Nginx Log Cleanup ==="
+echo "Current log size:"
+du -sh logs/
+
+# Keep only last 1000 lines (adjust as needed)
+if [ -f "logs/detailed_access.log" ]; then
+    echo "Rotating logs (keeping last 1000 lines)..."
+    tail -1000 logs/detailed_access.log > logs/detailed_access.log.tmp
+    mv logs/detailed_access.log.tmp logs/detailed_access.log
+    echo "Log rotation complete!"
+else
+    echo "No detailed_access.log found - skipping rotation"
+fi
+
+echo "New log size:"
+du -sh logs/
+EOF
+
+chmod +x scripts/cleanup_logs.sh
+
 echo ""
 echo "✓ Monitoring setup complete!"
 echo ""
 echo "Next steps:"
-echo "1. Restart your nginx container: docker-compose restart nginx"
+echo "1. Restart your nginx container: docker compose docker compose -f docker-compose.vps.yml down && docker compose -f docker-compose.vps.yml up --build -d"
 echo "2. Run initial performance test: ./scripts/test_performance.sh"
 echo "3. Check logs are being generated: ls -la logs/"
 echo "4. Analyze current performance: ./scripts/analyze_logs.sh"
+echo "5. Cleanup logs when needed: ./scripts/cleanup_logs.sh"
 echo ""
 echo "Your performance monitoring is ready!"

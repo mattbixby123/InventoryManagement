@@ -346,7 +346,6 @@ The performance monitoring setup provides baseline metrics to track improvements
 
 **Cleanup Command:**
 ```bash
-# Keep last 1000 lines only
-tail -1000 logs/detailed_access.log > logs/detailed_access.log.tmp
-mv logs/detailed_access.log.tmp logs/detailed_access.log
+# Run log cleanup (keeps last 1000 lines)
+./scripts/cleanup_logs.sh
 ```
