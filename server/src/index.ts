@@ -22,13 +22,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 /* CORS config */
+const allowedOrigins = [];
+
+// Production/VPS deployment
+if (process.env.DOCKER_ENV === 'true') {
+  allowedOrigins.push('https://inventory.matthewbixby.com');
+}
+
+// Development (both local and Docker Desktop)
+if (process.env.NODE_ENV === 'development') {
+  allowedOrigins.push(
+    'http://localhost:3000',
+    'https://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost'
+  );
+}
+
 const corsOptions = {
-  origin: [
-    process.env.NODE_ENV === 'production' 
-      ? 'https://inventory.matthewbixby.com' 
-      : 'https://localhost',  // Change to HTTPS since nginx redirects
-    'http://localhost:3000'
-  ],
+  origin: allowedOrigins,
   credentials: true,
   exposedHeaders: ['Cross-Origin-Resource-Policy']
 };
