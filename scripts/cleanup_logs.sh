@@ -1,17 +1,33 @@
 #!/bin/bash
-# cleanup_logs.sh
+# cleanup_logs.sh - Clean up all nginx log files
 echo "=== Log Cleanup ==="
-echo "Current log size:"
+echo "Current log sizes:"
 du -sh logs/
 
-# Keep only last 1000 lines (safer approach)
-if [ -f logs/detailed_access.log ]; then
-    tail -1000 logs/detailed_access.log > logs/detailed_access.log.tmp && \
-    mv logs/detailed_access.log.tmp logs/detailed_access.log
-    echo "Log truncated to last 1000 lines"
-else
-    echo "No log file found"
-fi
+# Array of log files to clean
+LOG_FILES=("access.log" "detailed_access.log" "error.log")
 
-echo "New log size:"
+for log_file in "${LOG_FILES[@]}"; do
+    if [ -f "logs/$log_file" ]; then
+        # Keep only last 1000 lines
+        tail -1000 "logs/$log_file" > "logs/$log_file.tmp" && \
+        mv "logs/$log_file.tmp" "logs/$log_file"
+        echo "✓ $log_file truncated to last 1000 lines"
+    else
+        echo "⚠ logs/$log_file not found"
+    fi
+done
+
+echo ""
+echo "New log sizes:"
 du -sh logs/
+
+# Optional: Show total lines remaining in each file
+echo ""
+echo "Lines remaining:"
+for log_file in "${LOG_FILES[@]}"; do
+    if [ -f "logs/$log_file" ]; then
+        line_count=$(wc -l < "logs/$log_file")
+        echo "  $log_file: $line_count lines"
+    fi
+done

@@ -64,6 +64,13 @@ async function main() {
   ];
 
   try {
+    // Check if data already exists
+    const existingUsers = await prisma.users.count();
+    if (existingUsers > 0) {
+      console.log('Data already exists. Skipping seeding.');
+      return;
+    }
+    
     console.log('Clearing existing data...');
     await clearTables();
 
