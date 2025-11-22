@@ -34,8 +34,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    expose:
-      - "8000"
+    ports:
+      - "8000:8000"
     volumes:
       - /app/node_modules
     networks:
@@ -61,29 +61,28 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - ./client:/app
+      # - ./client:/app 
       - /app/node_modules
-      - /app/.next
+      - /app/.next # only for development
     networks:
       - inventory-network
     restart: unless-stopped
-
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./server/public:/var/www/static:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
-    networks:
-      - inventory-network
-    depends_on:
-      - frontend
-      - backend
+  # nginx: # Removed for development convenience
+  #   build:
+  #     context: ./nginx
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./server/public:/var/www/static:ro
+  #     - ./nginx/ssl:/etc/nginx/ssl:ro
+  #   networks:
+  #     - inventory-network
+  #   depends_on:
+  #     - frontend
+  #     - backend
 
 volumes:
   postgres_data:

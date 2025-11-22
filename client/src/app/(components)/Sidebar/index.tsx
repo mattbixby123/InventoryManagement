@@ -60,7 +60,7 @@ const Sidebar = () => {
       {/* TOP LOGO */}
       <div className={`flex gap-3 justify-between md:justify-normal items-center pt-8 ${isSidebarCollapsed ? "px-5" : "px-8"}`}>
       <Image
-              src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/images/logo.png`}
+              src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL || ''}/images/logo.png`}
               alt="bixstock-logo"
               width={27}
               height={27}
