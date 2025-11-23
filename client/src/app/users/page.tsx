@@ -2,7 +2,8 @@
 
 import { useGetUsersQuery } from "@/state/api";
 import Header from "@/app/(components)/Header";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
+import ThemedDataGrid from "@/app/(components)/ThemedDataGrid";
 
 const columns: GridColDef[] = [
   { field: "userId", headerName: "ID", width: 90 },
@@ -26,12 +27,12 @@ const Users = () => {
   return (
     <div className="flex flex-col">
       <Header name="Users" />
-      <DataGrid
+      <ThemedDataGrid
         rows={users}
         columns={columns}
         getRowId={(row) => row.userId}
         checkboxSelection
-        className="bg-white shadow rounded-lg border border-gray-200 mt-5 !text-gray-700"
+        className="shadow rounded-lg border mt-5"
       />
     </div>
   );
