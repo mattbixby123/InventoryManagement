@@ -1,8 +1,9 @@
 "use client";
 
 import { useGetProductsQuery } from "@/state/api";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import Header from "@/app/(components)/Header";
+import ThemedDataGrid from "@/app/(components)/ThemedDataGrid";
 
 const columns: GridColDef[] = [
   { field: "productId", headerName: "ID", width: 90 },
@@ -47,12 +48,12 @@ const Inventory = () => {
   return (
     <div className="flex flex-col">
       <Header name="Inventory" />
-      <DataGrid
+      <ThemedDataGrid
         rows={products}
         columns={columns}
         getRowId={(row) => row.productId}
         checkboxSelection
-        className="bg-white shadow rounded-lg border border-gray-200 mt-5 !text-gray-700"
+        className="shadow rounded-lg border mt-5"
       />
     </div>
   );

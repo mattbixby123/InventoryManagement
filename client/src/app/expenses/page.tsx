@@ -71,9 +71,9 @@ const Expenses = () => {
   }, [expenses, selectedCategory, startDate, endDate]);
 
   const classNames = {
-    label: "block text-sm font-medium text-gray-700",
+    label: "block text-sm font-medium text-gray-700 dark:text-gray-300",
     selectInput:
-      "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md",
+      "mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md",
   };
 
   if (isLoading) {
@@ -93,15 +93,15 @@ const Expenses = () => {
       {/* HEADER */}
       <div className="mb-5">
         <Header name="Expenses" />
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 dark:text-gray-400">
           A visual representation of expenses over time.
         </p>
       </div>
 
       {/* FILTERS */}
       <div className="flex flex-col md:flex-row justify-between gap-4">
-        <div className="w-full md:w-1/3 bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-4">
+        <div className="w-full md:w-1/3 bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+          <h3 className="text-lg font-semibold mb-4 dark:text-gray-200">
             Filter by Category and Date
           </h3>
           <div className="space-y-4">
@@ -152,7 +152,7 @@ const Expenses = () => {
           </div>
         </div>
         {/* PIE CHART */}
-        <div className="flex-grow bg-white shadow rounded-lg p-4 md:p-6">
+        <div className="flex-grow bg-white dark:bg-gray-800 shadow rounded-lg p-4 md:p-6">
           <ResponsiveContainer width="100%" height={400}>
             <PieChart>
               <Pie
