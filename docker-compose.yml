@@ -20,7 +20,7 @@ services:
 
   backend:
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      test: [ "CMD", "curl", "-f", "http://backend:8000/health" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -56,7 +56,7 @@ services:
     depends_on:
       - backend
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:3000" ]
+      test: [ "CMD", "curl", "-f", "http://frontend:3000" ]
       interval: 5s
       timeout: 5s
       retries: 5
