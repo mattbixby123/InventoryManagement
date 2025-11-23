@@ -1,7 +1,27 @@
+"use client";
+
 import React, { useState } from 'react'
 import { useGetDashboardMetricsQuery } from '../../state/api';
 import { TrendingUp } from 'lucide-react';
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const CardSalesSummary = () => {
   const { data, isLoading, isError } = useGetDashboardMetricsQuery();
@@ -25,6 +45,62 @@ const CardSalesSummary = () => {
     year: '2-digit'
   }) : "N/A";
 
+  const chartData = {
+    labels: salesData.map(item => {
+      const date = new Date(item.date);
+      return `${date.getMonth() + 1}/${date.getDate()}`;
+    }),
+    datasets: [
+      {
+        label: 'Sales',
+        data: salesData.map(item => item.totalValue),
+        backgroundColor: '#3182ce',
+        borderRadius: 10,
+        barThickness: 10,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context: any) {
+            return `$${context.parsed.y.toLocaleString("en")}`;
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        ticks: {
+          callback: function(value: any) {
+            return `$${(value / 1000000).toFixed(0)}m`;
+          },
+          font: {
+            size: 12,
+          }
+        },
+        border: {
+          display: false,
+        },
+        grid: {
+          display: false,
+        }
+      },
+      x: {
+        grid: {
+          display: false,
+        }
+      }
+    }
+  };
+
   if (isError) {
     return <div className='m-5'>Failed to fetch data</div>
   }
@@ -35,7 +111,7 @@ const CardSalesSummary = () => {
         <div className='m-5'>Loading...</div> 
       ) : ( 
         <>
-        {/* HEADER */}
+          {/* HEADER */}
           <div>
             <h2 className='text-lg font-semibold mb-2 px-7 pt-5'>
               Sales Summary
@@ -63,50 +139,20 @@ const CardSalesSummary = () => {
               </div>
               <select 
                 className='shadow-sm border border-gray-300 bg-white p-2 rounded'
-                  value={timeframe}
-                  onChange={(e) => {
-                    setTimeframe(e.target.value);
-                  }}
+                value={timeframe}
+                onChange={(e) => {
+                  setTimeframe(e.target.value);
+                }}
               >
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
                 <option value="monthly">Monthly</option>
               </select>
             </div>
-            <ResponsiveContainer width="100%" height={350} className="px-7">
-                <BarChart
-                  data={salesData}
-                  margin={{ top: 0, right: 0, left: -25, bottom: 0}}
-                >
-                  <CartesianGrid strokeDasharray="" vertical={false} />
-                  <XAxis 
-                    dataKey="date" 
-                    tickFormatter={(value) => {
-                      const date = new Date(value);
-                      return `${date.getMonth() + 1}/${date.getDate()}`
-                    }}
-                  />
-                  <YAxis 
-                    tickFormatter={(value) => {
-                      return `$${(value / 1000000).toFixed(0)}m`;
-                    }}
-                    tick={{fontSize: 12, dx: -1}}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <Tooltip 
-                    formatter={(value: number) => [
-                      `$${value.toLocaleString("en")}`
-                    ]}
-                  />
-                  <Bar 
-                    dataKey="totalValue"
-                    fill="#3182ce"
-                    barSize={10}
-                    radius={[10, 10, 0, 0]}
-                  />
-                </BarChart>
-            </ResponsiveContainer>
+            {/* CHART */}
+            <div className="px-7" style={{ height: '350px' }}>
+              <Bar data={chartData} options={options} />
+            </div>
           </div>
           {/* FOOTER */}
           <div>
@@ -120,11 +166,8 @@ const CardSalesSummary = () => {
             </div>
           </div>
         </>
-        
       )}
     </div>
-
-    // "row-span-3 xl:row-span-6 bg-gray-500"
   )
 }
 

@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ['recharts'],
   images: {
     remotePatterns: [
       {
@@ -14,20 +15,17 @@ const nextConfig = {
         port: '80',
         pathname: '/static/**',
       },
-      // For production (example)
       {
         protocol: 'https',
         hostname: 'yourdomain.com',
         pathname: '/static/**',
       },
-      // For production (S3)
       {
         protocol: "https",
         hostname: "s3-inventorymanager.s3.amazonaws.com",
         pathname: "/**",
       }
     ],
-    // Disable optimization for static images in development
     unoptimized: true
   }
 };

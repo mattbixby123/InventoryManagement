@@ -1,8 +1,28 @@
+"use client";
+
 import React from 'react'
 import { useGetDashboardMetricsQuery } from '../../state/api';
 import numeral from 'numeral';
 import { TrendingDown, TrendingUp } from 'lucide-react';
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip,
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Filler,
+  Tooltip
+);
 
 const CardPurchaseSummary = () => {
   const { data, isLoading } = useGetDashboardMetricsQuery();
@@ -10,8 +30,76 @@ const CardPurchaseSummary = () => {
 
   const lastDataPoint = purchaseData[purchaseData.length - 1] || null;
 
+  const chartData = {
+    labels: purchaseData.map(() => ''),
+    datasets: [
+      {
+        data: purchaseData.map(item => item.totalPurchased),
+        borderColor: '#8884d8',
+        backgroundColor: 'rgba(136, 132, 216, 0.5)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 3,
+        pointBackgroundColor: '#8884d8',
+        pointBorderColor: '#8884d8',
+        pointHoverRadius: 5,
+        borderWidth: 2,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        mode: 'index' as const,
+        intersect: false,
+        callbacks: {
+          title: function(context: any) {
+            const index = context[0].dataIndex;
+            const date = new Date(purchaseData[index].date);
+            return date.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            });
+          },
+          label: function(context: any) {
+            return `$${context.parsed.y.toLocaleString("en")}`;
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        display: false,
+        beginAtZero: true,
+      },
+      x: {
+        display: false,
+      }
+    },
+    interaction: {
+      mode: 'nearest' as const,
+      axis: 'x' as const,
+      intersect: false
+    },
+    layout: {
+      padding: {
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0
+      }
+    }
+  };
+
   return (
-    <div className='flex flex-col justify-between row-span-2 xl:row-span-3 col-span-1 md:col-span-2 xl:col-span-1 bg-white shadow-md rounded-2xl'>
+    <div className='flex flex-col justify-between row-span-2 xl:row-span-3 col-span-1 md:col-span-2 xl:col-span-1 bg-white shadow-md rounded-2xl overflow-hidden'>
       {isLoading ? ( <div className='m-5'>Loading...</div> 
     ) : ( 
       <> 
@@ -24,9 +112,9 @@ const CardPurchaseSummary = () => {
         </div>
 
         {/* BODY */}
-        <div>
+        <div className='flex-1 flex flex-col'>
           {/* BODY HEADER */}
-          <div className='mb-4 mt-7 px-7'>
+          <div className='mb-2 mt-0 px-7'>
             <p className='text-xs text-gray-400'>Purchased</p>
             <div className='flex items-center'>
               <p className='text-2xl font-bold'>
@@ -53,35 +141,11 @@ const CardPurchaseSummary = () => {
             </div>
           </div>
           {/* CHART */}
-          <ResponsiveContainer width="100%" height={200} className="p-2">
-              <AreaChart
-                data={purchaseData}
-                margin={{ top: 0, right: 0, left: -50, bottom: 45 }}
-              >
-                <XAxis dataKey="date" tick={false} axisLine={false} />
-                <YAxis tickLine={false} tick={false} axisLine={false} />
-                <Tooltip
-                  formatter={(value: number) => [
-                    `$${value.toLocaleString("en")}`,
-                  ]}
-                  labelFormatter={(label) => {
-                    const date = new Date(label);
-                    return date.toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    });
-                  }}
-                />
-                <Area
-                  type="linear"
-                  dataKey="totalPurchased"
-                  stroke="#8884d8"
-                  fill="#8884d8"
-                  dot={true}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+          <div className="flex-1 px-7 pb-5 min-h-0">
+            <div style={{ height: '100%', maxHeight: '200px' }}>
+              <Line data={chartData} options={options} />
+            </div>
+          </div>
         </div>
       </> 
     )}
