@@ -70,8 +70,8 @@ const CardSalesSummary = () => {
       },
       tooltip: {
         callbacks: {
-          label: function(context: any) {
-            return `$${context.parsed.y.toLocaleString("en")}`;
+          label: function(context: { parsed: { y: number | null } }) {
+            return `$${(context.parsed.y ?? 0).toLocaleString("en")}`;
           }
         }
       }
@@ -79,8 +79,8 @@ const CardSalesSummary = () => {
     scales: {
       y: {
         ticks: {
-          callback: function(value: any) {
-            return `$${(value / 1000000).toFixed(0)}m`;
+          callback: function(value: number | string) {
+            return `$${(Number(value) / 1000000).toFixed(0)}m`;
           },
           font: {
             size: 12,

@@ -59,7 +59,7 @@ const CardPurchaseSummary = () => {
         mode: 'index' as const,
         intersect: false,
         callbacks: {
-          title: function(context: any) {
+          title: function(context: { dataIndex: number }[]) {
             const index = context[0].dataIndex;
             const date = new Date(purchaseData[index].date);
             return date.toLocaleDateString("en-US", {
@@ -68,8 +68,8 @@ const CardPurchaseSummary = () => {
               day: "numeric",
             });
           },
-          label: function(context: any) {
-            return `$${context.parsed.y.toLocaleString("en")}`;
+          label: function(context: { parsed: { y: number | null } }) {
+            return `$${(context.parsed.y ?? 0).toLocaleString("en")}`;
           }
         }
       }

@@ -19,7 +19,7 @@ interface ExpensesChartProps {
 
 export default function ExpensesChart({ 
   aggregatedData, 
-  activeIndex, 
+  activeIndex: _activeIndex, 
   setActiveIndex 
 }: ExpensesChartProps) {
   const chartData = {
@@ -43,13 +43,13 @@ export default function ExpensesChart({
       },
       tooltip: {
         callbacks: {
-          label: function(context: any) {
+          label: function(context: { label: string; parsed: number }) {
             return `${context.label}: $${context.parsed.toLocaleString()}`;
           }
         }
       }
     },
-    onHover: (event: any, elements: any[]) => {
+    onHover: (_event: unknown, elements: { index: number }[]) => {
       if (elements.length > 0) {
         setActiveIndex(elements[0].index);
       }
