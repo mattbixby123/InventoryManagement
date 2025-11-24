@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react'
+import React from 'react'
 import { useGetDashboardMetricsQuery } from '../../state/api';
 import { TrendingUp } from 'lucide-react';
 import { Bar } from 'react-chartjs-2';
@@ -27,8 +27,6 @@ const CardSalesSummary = () => {
   const { data, isLoading, isError } = useGetDashboardMetricsQuery();
   const salesData = data?.salesSummary || [];
 
-  const [timeframe, setTimeframe] = useState("weekly");
-
   const totalValueSum = salesData.reduce((acc, curr) => acc + curr.totalValue, 0) || 0;
 
   const averageChangePercentage = salesData.reduce((acc, curr, _, array) => {
@@ -46,7 +44,7 @@ const CardSalesSummary = () => {
   }) : "N/A";
 
   const chartData = {
-    labels: salesData.map(item => {
+    labels: salesData.slice().reverse().map(item => {
       const date = new Date(item.date);
       return `${date.getMonth() + 1}/${date.getDate()}`;
     }),
@@ -137,16 +135,13 @@ const CardSalesSummary = () => {
                   {averageChangePercentage.toFixed(2)}%
                 </span>
               </div>
+              {/* Fixed to Weekly - Disabled select */}
               <select 
-                className='shadow-sm border border-gray-300 bg-white p-2 rounded'
-                value={timeframe}
-                onChange={(e) => {
-                  setTimeframe(e.target.value);
-                }}
+                className='shadow-sm border border-gray-300 bg-gray-50 p-2 rounded text-gray-500 cursor-not-allowed'
+                value="weekly"
+                disabled
               >
-                <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
               </select>
             </div>
             {/* CHART */}

@@ -46,12 +46,20 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-/* Static Files handled in .env.local for non docker development*/
-if (process.env.SERVE_STATIC_IMAGES === 'true' && !process.env.DOCKER_ENV) {
-  // Use process.cwd() to get the project root, not __dirname
-  const imagesPath = path.join(process.cwd(), 'public/images');
+/* Static Files */
+// Serve static images in both local and Docker environments
+const shouldServeStatic = process.env.SERVE_STATIC_IMAGES === 'true' || process.env.DOCKER_ENV === 'true';
+
+if (shouldServeStatic) {
+  // In Docker, files are at /app/public/images (defined in Dockerfile WORKDIR)
+  // In local, files are at project_root/public/images
+  const imagesPath = process.env.DOCKER_ENV === 'true' 
+    ? path.join('/app', 'public', 'images')
+    : path.join(process.cwd(), 'public', 'images');
+  
   app.use('/api/public/images', express.static(imagesPath));
-  console.log('🖼️ Serving static images from:', imagesPath);
+  console.log('🖼️  Serving static images from:', imagesPath);
+  console.log('📍 Images available at: http://localhost:8000/api/public/images/');
 }
 
 /* ROUTES */
@@ -59,7 +67,6 @@ app.use("/api/dashboard", dashboardRoutes); // http://localhost:8000/dashboard
 app.use("/api/products", productRoutes); // http://localhost:8000/products
 app.use("/api/users", userRoutes); // http://localhost:8000/users
 app.use("/api/expenses", expenseRoutes) // http://localhost:8000/expenses
-
 
 // health check route
 app.get('/health', (_req: Request, res: Response) => {

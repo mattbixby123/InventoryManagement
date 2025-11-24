@@ -37,7 +37,10 @@ services:
     ports:
       - "8000:8000"
     volumes:
+      - ./server:/app # <-- for development, mount the server code
       - /app/node_modules
+      - ./server/public:/app/public:ro #  Mount public directory as read-only
+
     networks:
       - inventory-network
     command: >
