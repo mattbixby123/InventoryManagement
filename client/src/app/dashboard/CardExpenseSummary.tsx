@@ -17,9 +17,19 @@ const colors = ["#00C49F", "#0088FE", "#FFBB28"]
 const CardExpenseSummary = () => {
   const { data: dashboardMetrics , isLoading } = useGetDashboardMetricsQuery();
 
-  const expenseSummary = dashboardMetrics?.expenseSummary[0];
-
+  const expenseSummaryData = dashboardMetrics?.expenseSummary || [];
   const expenseByCategorySummary = dashboardMetrics?.expenseByCategorySummary || [];
+
+  // Calculate total expenses across all days
+  const totalExpensesAllDays = expenseSummaryData.reduce(
+    (acc, curr) => acc + curr.totalExpenses,
+    0
+  ) || 0;
+
+  // Calculate average expenses per day
+  const averageExpenses = expenseSummaryData.length > 0 
+    ? totalExpensesAllDays / expenseSummaryData.length 
+    : 0;
 
   const expenseSums = expenseByCategorySummary.reduce(
     (acc: ExpenseSums, item: ExpenseByCategorySummary) => {
@@ -43,7 +53,11 @@ const CardExpenseSummary = () => {
     (acc, category: { value: number }) => acc + category.value,
     0
   );
-  const formattedTotalExpenses = totalExpenses.toFixed(2);
+  
+  const formattedTotalExpenses = totalExpenses.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
 
   const chartData = {
     labels: expenseCategories.map(item => item.name),
@@ -69,7 +83,8 @@ const CardExpenseSummary = () => {
 
   return (
     <div className='row-span-3 bg-white shadow-md rounded-2xl flex flex-col justify-between'>
-      {isLoading ? ( <div className='m-5'>Loading...</div> 
+      {isLoading ? ( 
+        <div className='m-5'>Loading...</div> 
       ) : ( 
         <> 
           {/* HEADER */}
@@ -91,17 +106,19 @@ const CardExpenseSummary = () => {
               </div>
             </div>
             {/* LABELS */}
-            <ul className="flex flex-col justify-around items-center xl:items-start py-5 gap-3">
+            <ul className="flex flex-col justify-around items-center xl:items-start py-3 gap-1">
               {expenseCategories.map((entry, index) => (
                 <li
                   key={`legend-${index}`}
                   className="flex items-center text-xs"
                 >
                   <span
-                    className="mr-2 w-3 h-3 rounded-full"
+                    className="mr-2 w-3 h-3 rounded-full flex-shrink-0"
                     style={{ backgroundColor: colors[index % colors.length] }}
                   ></span>
-                  {entry.name}
+                  <span className="whitespace-nowrap">
+                    {entry.name.replace(' Expenses', '')}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -109,13 +126,16 @@ const CardExpenseSummary = () => {
           {/* FOOTER */}
           <div>
             <hr />
-            {expenseSummary && (
+            {expenseSummaryData.length > 0 && (
               <div className="mt-3 flex justify-between items-center px-7 mb-4">
                 <div className="pt-2">
                   <p className="text-sm">
                     Average:{" "}
                     <span className="font-semibold">
-                      ${expenseSummary.totalExpenses.toFixed(2)}
+                      ${averageExpenses.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })}
                     </span>
                   </p>
                 </div>
@@ -130,6 +150,5 @@ const CardExpenseSummary = () => {
       )}
     </div>
   )
-} 
-
-export default CardExpenseSummary
+}
+export default CardExpenseSummary;

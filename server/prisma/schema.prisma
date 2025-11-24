@@ -81,7 +81,7 @@ model ExpenseByCategory {
   expenseByCategoryId String         @id
   expenseSummaryId    String
   category            String
-  amount              BigInt
+  amount              Decimal
   date                DateTime
   expenseSummary      ExpenseSummary @relation(fields: [expenseSummaryId], references: [expenseSummaryId])
 }
