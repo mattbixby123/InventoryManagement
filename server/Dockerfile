@@ -2,7 +2,7 @@
 FROM node:22-alpine
 
 # Install dependencies including openssl and postgresql-client for health checks
-RUN apk add --no-cache openssl postgresql-client
+RUN apk add --no-cache openssl postgresql-client curl
 
 WORKDIR /app
 
