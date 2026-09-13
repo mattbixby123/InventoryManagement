@@ -1,7 +1,7 @@
 FROM nginx:alpine
 
 # Install netcat for healthchecks
-RUN apk add --no-cache netcat-openbsd
+RUN apk add --no-cache netcat-openbsd curl
 
 # Set proper permissions for log directory
 RUN chmod 755 /var/log/nginx
